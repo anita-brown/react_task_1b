@@ -52,6 +52,29 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     //TODO
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      sdk
+        .getProfile()
+        .then((result) => {
+          dispatch({
+            type: "LOGIN",
+            payload: {
+              user: result.user,
+              token: token,
+              role: result.role,
+            },
+          });
+        })
+        .catch((error) => {
+          tokenExpireError(dispatch, error.message);
+        });
+    } else {
+      dispatch({
+        type: "LOGOUT",
+      });
+    }
   }, []);
 
   return (
