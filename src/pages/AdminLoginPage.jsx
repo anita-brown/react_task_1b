@@ -5,6 +5,7 @@ import * as yup from "yup";
 import MkdSDK from "../utils/MkdSDK";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../authContext";
+import SnackBar from "../components/SnackBar";
 
 const AdminLoginPage = () => {
   const schema = yup
@@ -28,60 +29,84 @@ const AdminLoginPage = () => {
   const onSubmit = async (data) => {
     let sdk = new MkdSDK();
     //TODO
+    try {
+      const result = await sdk.login(data.email, data.password, "admin");
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          user: result.user,
+          token: result.token,
+          role: result.role,
+        },
+      });
+
+      // setIsLogin(true);
+
+      // <SnackBar/>
+      navigate("/admin/dashboard", { replace: true });
+      // setTimeout(() => {
+      // }, 2000);
+    } catch (error) {
+      setError("email", {
+        type: "manual",
+        message: error.message,
+      });
+    }
   };
 
   return (
-    <div className="w-full max-w-xs mx-auto">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-8 "
-      >
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="email"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            placeholder="Email"
-            {...register("email")}
-            className={`"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-              errors.email?.message ? "border-red-500" : ""
-            }`}
-          />
-          <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
-        </div>
+    <>
 
-        <div className="mb-6">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            placeholder="******************"
-            {...register("password")}
-            className={`shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
-              errors.password?.message ? "border-red-500" : ""
-            }`}
-          />
-          <p className="text-red-500 text-xs italic">
-            {errors.password?.message}
-          </p>
-        </div>
-        <div className="flex items-center justify-between">
-          <input
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            value="Sign In"
-          />
-        </div>
-      </form>
-    </div>
+      <div className="w-full max-w-xs mx-auto">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-8 "
+        >
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="Email"
+              {...register("email")}
+              className={`"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.email?.message ? "border-red-500" : ""
+                }`}
+            />
+            <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
+          </div>
+
+          <div className="mb-6">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="******************"
+              {...register("password")}
+              className={`shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${errors.password?.message ? "border-red-500" : ""
+                }`}
+            />
+            <p className="text-red-500 text-xs italic">
+              {errors.password?.message}
+            </p>
+          </div>
+          <div className="flex items-center justify-between">
+            <input
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              value="Sign In"
+            />
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 
