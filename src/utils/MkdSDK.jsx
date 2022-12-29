@@ -114,6 +114,23 @@ export default function MkdSDK() {
 
   this.check = async function (role) {
     //TODO
+    const header = {
+      "Content-Type": "application/json",
+      "x-project": base64Encode,
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    };
+
+    const payload = {
+      role: role,
+    };
+
+    const result = await fetch(this._baseurl + "/v1/api/rest/check", {
+      method: "post",
+      headers: header,
+      body: JSON.stringify(payload),
+    });
+
+    const json = await result.json();
   };
 
   return this;
