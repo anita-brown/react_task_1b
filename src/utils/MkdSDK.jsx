@@ -15,6 +15,32 @@ export default function MkdSDK() {
   
   this.login = async function (email, password, role) {
     //TODO
+    const header = {
+      "Content-Type": "application/json",
+      "x-project": base64Encode,
+    }
+    const payload = {
+      email: email,
+      password: password,
+      role: role,
+    };
+    const result = await fetch(this._baseurl + "/v2/api/lambda/login", {
+      method: "post",
+      headers: header,
+      body: JSON.stringify(payload),
+    });
+
+    const json = await result.json();
+
+    if (result.status === 401) {
+      throw new Error(json.message);
+    }
+
+    if (result.status === 403) {
+      throw new Error(json.message);
+    }
+
+    return json;
   };
 
   this.getHeader = function () {
