@@ -12,13 +12,15 @@ export default function MkdSDK() {
   this.setTable = function (table) {
     this._table = table;
   };
-  
+
   this.login = async function (email, password, role) {
     //TODO
     const header = {
       "Content-Type": "application/json",
       "x-project": base64Encode,
-    }
+    };
+
+    console.log({ base64Encode });
     const payload = {
       email: email,
       password: password,
@@ -53,7 +55,7 @@ export default function MkdSDK() {
   this.baseUrl = function () {
     return this._baseurl;
   };
-  
+
   this.callRestAPI = async function (payload, method) {
     const header = {
       "Content-Type": "application/json",
@@ -64,13 +66,15 @@ export default function MkdSDK() {
     switch (method) {
       case "GET":
         const getResult = await fetch(
-          this._baseurl + `/v1/api/rest/${this._table}/GET`,
+          "https://reacttask.mkdlabs.com/v1/api/rest/video/PAGINATE",
           {
             method: "post",
             headers: header,
             body: JSON.stringify(payload),
           }
         );
+
+        console.log({ getResult });
         const jsonGet = await getResult.json();
 
         if (getResult.status === 401) {
@@ -81,7 +85,7 @@ export default function MkdSDK() {
           throw new Error(jsonGet.message);
         }
         return jsonGet;
-      
+
       case "PAGINATE":
         if (!payload.page) {
           payload.page = 1;
@@ -110,7 +114,7 @@ export default function MkdSDK() {
       default:
         break;
     }
-  };  
+  };
 
   this.check = async function (role) {
     //TODO

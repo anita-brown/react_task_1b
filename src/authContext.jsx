@@ -13,7 +13,6 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
-      //TODO
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("role", action.payload.role);
       return {
@@ -52,11 +51,14 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     //TODO
-    const token = localStorage.getItem("token");
 
-    if (token) {
+    const role = localStorage.getItem("role");
+    const token = localStorage.getItem("token");
+    // check if token is still valid
+
+    if (role && token) {
       sdk
-        .getProfile()
+        .check(role)
         .then((result) => {
           dispatch({
             type: "LOGIN",
@@ -68,12 +70,9 @@ const AuthProvider = ({ children }) => {
           });
         })
         .catch((error) => {
+          console.log(error, "error");
           tokenExpireError(dispatch, error.message);
         });
-    } else {
-      dispatch({
-        type: "LOGOUT",
-      });
     }
   }, []);
 

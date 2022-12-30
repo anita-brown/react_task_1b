@@ -36,8 +36,8 @@ function Main() {
     <div className="h-full">
       <div className="flex w-full">
         <div className="w-full">
-          <div className="page-wrapper w-full px-[2rem] lg:px-[10rem] md:px-[5rem]">
-            <AdminDashboardPage />
+          <div className="page-wrapper w-full py-10 px-5">
+            <AdminDashboardPage/>
             {/* {!state.isAuthenticated
               ? renderRoutes("none")
               : renderRoutes(state.role)} */}
